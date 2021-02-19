@@ -1,0 +1,58 @@
+plugins {
+    id 'org.springframework.boot' version '2.4.2'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+group = 'com.tyq'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+allprojects {
+    repositories {
+        mavenLocal()
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        maven { url 'https://maven.aliyun.com/repository/spring/' }
+        maven { url 'https://maven.aliyun.com/repository/gradle-plugin/' }
+        maven { url 'https://maven.aliyun.com/repository/spring-plugin/' }
+        mavenCentral()
+    }
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-amqp'
+    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'mysql:mysql-connector-java'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.amqp:spring-rabbit-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+
+    testImplementation('com.alibaba.testable:testable-all:0.4.12')
+    testAnnotationProcessor('com.alibaba.testable:testable-processor:0.4.12')
+
+    // JUnit 5 依賴設定
+    testImplementation 'org.junit.jupiter:junit-jupiter-api' // JUnit 5 API 介面
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine' // JUnit 5 測試框架的實作
+}
+
+test {
+    useJUnitPlatform()
+    jvmArgs "-javaagent:${classpath.find { it.name.contains("testable-agent") }.absolutePath}"
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
